@@ -15,6 +15,7 @@
         "webmozart/assert": "^1.11"
     },
     "require-dev": {
+        "barryvdh/laravel-ide-helper": "^3.5",
         "dg/bypass-finals": "^1.9",
         "fakerphp/faker": "^1.23",
         "ilyes512/code-style": "^2.0",
@@ -44,7 +45,9 @@
     "scripts": {
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi"
+            "@php artisan package:discover --ansi",
+            "[ \"$COMPOSER_DEV_MODE\" = \"1\" ] && $PHP_BINARY artisan ide-helper:generate || true",
+            "[ \"$COMPOSER_DEV_MODE\" = \"1\" ] && $PHP_BINARY artisan ide-helper:meta || true"
         ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
