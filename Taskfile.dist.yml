@@ -56,6 +56,6 @@ tasks:
     status:
        - test ! -d "{{.BOILR_TEMPLATE_TEST_NAME}}"
     cmds:
-      - cd "{{.BOILR_TEMPLATE_TEST_NAME}}" && task down
+      # - cd "{{.BOILR_TEMPLATE_TEST_NAME}}" && task down
       - rm -rf "{{.BOILR_TEMPLATE_TEST_NAME}}"
       - boilr template delete "{{.BOILR_TEMPLATE_TEST_NAME}}"
