@@ -1,0 +1,12 @@
+fastcgi_param  HTTPS                    $forwarded_https  if_not_empty;
+fastcgi_param  REMOTE_ADDR              $http_x_forwarded_for;
+fastcgi_param  REQUEST_SCHEME           $http_x_forwarded_proto;
+fastcgi_param  SERVER_NAME              $http_host;
+fastcgi_param  SERVER_PORT              $http_x_forwarded_port;
+
+fastcgi_param  HTTP_X_FORWARDED_FOR     "";
+fastcgi_param  HTTP_X_FORWARDED_HOST    "";
+fastcgi_param  HTTP_X_FORWARDED_PORT    "";
+fastcgi_param  HTTP_X_FORWARDED_PROTO   "";
+fastcgi_param  HTTP_X_FORWARDED_SERVER  "";
+fastcgi_param  HTTP_X_REAL_IP           "";
