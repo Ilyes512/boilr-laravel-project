@@ -1,0 +1,11 @@
+includes:
+	- phpstan-baseline.neon
+
+parameters:
+	level: max
+	tmpDir: ./.phpstan.cache
+	noEnvCallsOutsideOfConfig: true
+	checkModelProperties: true
+	paths:
+		- app
+		- tests

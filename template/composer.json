@@ -15,9 +15,15 @@
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
+        "ilyes512/code-style": "^2.0",
+        "larastan/larastan": "^3",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.1",
-        "phpunit/phpunit": "^11.0.1"
+        "phpstan/extension-installer": "^1.4",
+        "phpstan/phpstan-mockery": "^2.0",
+        "phpstan/phpstan-strict-rules": "^2.0",
+        "phpunit/phpunit": "^11.0.1",
+        "shipmonk/phpstan-rules": "^4.0"
     },
     "autoload": {
         "psr-4": {
@@ -38,7 +44,26 @@
         ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
-        ]
+        ],
+        "checkall": [
+            "composer validate",
+            "@checkstyle",
+            "@checktype",
+            "@test"
+        ],
+        "test": [
+            "Composer\\Config::disableProcessTimeout",
+            "XDEBUG_MODE=off phpunit -d --without-creating-snapshots"
+        ],
+        "test-report": [
+            "Composer\\Config::disableProcessTimeout",
+            "XDEBUG_MODE=off php -dpcov.enabled=1 -dpcov.directory=. vendor/bin/phpunit -d --without-creating-snapshots --coverage-text --coverage-html coverage/html"
+        ],
+        "checkstyle": "XDEBUG_MODE=off phpcs -n",
+        "fixstyle": "XDEBUG_MODE=off phpcbf -n",
+        "checktype": "XDEBUG_MODE=off phpstan analyse --memory-limit=-1 -v",
+        "update-type-baseline": "XDEBUG_MODE=off phpstan --generate-baseline",
+        "update-test-snapshots": "XDEBUG_MODE=off vendor/bin/phpunit -d --update-snapshots"
     },
     "extra": {
         "laravel": {
@@ -50,9 +75,21 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
-            "php-http/discovery": true
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "php-http/discovery": true,
+            "phpstan/extension-installer": true
         }
     },
     "minimum-stability": "stable",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "scripts-descriptions": {
+        "checkall": "Run all checks including tests",
+        "test": "Run PHPUnit tests",
+        "test-report": "Run PHPUnit tests with coverage report",
+        "checkstyle": "Check code style using php_codesniffer",
+        "fixstyle": "Fix code style using php_codesniffer",
+        "checktype": "Check code type using PHPStan",
+        "update-type-baseline": "Update PHPStan baseline",
+        "update-test-snapshots": "Update PHPUnit snapshots"
+    }
 }

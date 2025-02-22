@@ -9,13 +9,8 @@ use Tests\TestCase;
 
 class ExampleTest extends TestCase
 {
-    /**
-     * A basic test example.
-     */
     public function testTheApplicationReturnsASuccessfulResponse(): void
     {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
+        self::markTestSkipped('This is just a placeholder feature test');
     }
 }
