@@ -1,3 +1,4 @@
+# Laravel default .gitignore
 /.phpunit.cache
 /node_modules
 /public/build
@@ -21,3 +22,20 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+
+# Local Setup
+.env.testing
+Taskfile.yml
+.task
+/coverage
+phpstan.neon
+.phpstan.cache
+.phpcs.cache
+
+# Custom
+public/css
+public/js
+
+_ide_helper_models.php
+_ide_helper.php
+.phpstorm.meta.php
