@@ -1,0 +1,24 @@
+server {
+  root   $NGINX_PUBLIC_DIR;
+  index  index.php index.html;
+
+  client_max_body_size $NGINX_CLIENT_MAX_BODY_SIZE;
+
+  location / {
+    try_files  $uri $uri/ /index.php$is_args$query_string;
+  }
+
+  location ~ \.php$ {
+    include  fastcgi_params;
+    include  fastcgi_forwarded_params;
+
+    fastcgi_pass          $CGI_HOST:$CGI_PORT;
+    fastcgi_index         index.php;
+    fastcgi_param         SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    fastcgi_read_timeout  $CGI_READ_TIMEOUT;
+  }
+
+  location ~ /\.ht {
+    deny  all;
+  }
+}

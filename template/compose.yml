@@ -1,0 +1,58 @@
+services:
+  php:
+    user: ${FIXUID:-1000}:${FIXGID:-1000}
+    build:
+      context: .
+      dockerfile: php/Dockerfile
+      target: builder
+
+  worker:
+    user: ${FIXUID:-1000}:${FIXGID:-1000}
+    build:
+      context: .
+      dockerfile: php/Dockerfile
+      target: builder
+    restart: unless-stopped
+    command:
+      - bash
+      - -c
+      - "trap : 3 ; wait-for-it mariadb:3306 --strict --timeout=20 -- wait-for-it redis:6379 --strict --timeout=20 -- php artisan queue:listen --sleep=10 & wait"
+    environment:
+      PHP_COMPOSER_INSTALL_DEV: false
+    depends_on:
+      - php
+      - redis
+      - mariadb
+
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+    depends_on:
+      - php
+    environment:
+      CGI_HOST: "php.${COMPOSE_PROJECT_NAME}_default"
+    labels:
+      - dev.orbstack.domains=foobar.local
+      - dev.orbstack.http-port=80
+
+  mariadb:
+    image: mariadb:11.7.2-noble
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+    labels:
+      - dev.orbstack.domains=db.foobar.local
+
+  redis:
+    image: redis:7.4.2-bookworm
+    labels:
+      - dev.orbstack.domains=redis.foobar.local
+
+  mailpit:
+    image: axllent/mailpit:v1.22.3
+    labels:
+      - dev.orbstack.domains=mail.foobar.local
+      - dev.orbstack.http-port=8025
