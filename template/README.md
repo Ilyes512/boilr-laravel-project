@@ -1,66 +1,56 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Foobar
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This Laravel project is scaffolded using [Boilr](https://github.com/Ilyes512/boilr)-tool using the [boilr-laravel-project](https://github.com/Ilyes512/boilr-laravel-project)-template.
 
-## About Laravel
+## Local setup
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Requirements
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- [Docker](https://www.docker.com/products/docker-desktop) (macOS users should prefer
+  [OrbStack](https://orbstack.dev/download) for better DX)
+- [Task](https://taskfile.dev/installation/)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+> [!NOTE]
+j> With the above requirements installed you should be able to start your local development environment pretty easily on
+> Linux and MacOS. Windows users can follow the instructions in
+> [Windows Local Development Setup](docs/windows-local-development-setup.md).
 
-## Learning Laravel
+### Task
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+[Task](https://taskfile.dev/) is a task runner / build tool. It is a simple tool that allows you to define and run tasks
+for your projects. It is similar to `make` but cross-platform and written in Go. To retrieve a complete list of all
+tasks run `task --list` in your terminal. Here is a short list of tasks to get you started:
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+#### Starting the project
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+To get the project up and running, run `task up`. This will automate all the steps needed to get the project up and
+running.
 
-## Laravel Sponsors
+| Description      | Uri or host:port        | OrbStack domain            |
+|------------------|-------------------------|----------------------------|
+| Application url  | <http://localhost:8080> | <http://foobar.local>      |
+| Mailpit url      | <http://localhost:8025> | <http://mail.foobar.local> |
+| MariDB host port | `localhost:3306`        | `db.foobar.local`          |
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+> [!TIP]
+> If you are a macOS user and you are using OrbStack, you can navigate to <http://orb.local> to see the domains of all
+> your running containers.
 
-### Premium Partners
+#### Stopping the project
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+To stop the project, run `task stop`. This won't delete the projects containers and volumes, so you can start the
+project again with the same state later.
 
-## Contributing
+#### Stopping and cleaning up the containers and volumes
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+To stop and remove the project's containers and volumes, run `task down`. You database state will be lost.
 
-## Code of Conduct
+#### Resetting the project
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+To reset the project, run `task reset`. This will stop the project and remove all containers and volumes. And finally
+start the project up again.
 
-## Security Vulnerabilities
+#### Refreshing the application
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+To refresh the project when for instance you are switching to a different branch, run `task app:refresh`. This will for
+instance (re)fetch the composer and npm dependencies, run the migrations and rebuild the front-end assets
