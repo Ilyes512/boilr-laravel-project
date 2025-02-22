@@ -1,0 +1,61 @@
+# https://taskfile.dev
+version: "3"
+
+silent: true
+
+vars:
+  BOILR_TEMPLATE_NAME: laravel-project
+  BOILR_TEMPLATE_TEST_NAME: "{{.BOILR_TEMPLATE_NAME}}-test"
+
+tasks:
+
+  update:
+    desc: Update the boilr template
+    deps: [remove-ds-store]
+    cmds:
+      - boilr template save . "{{.BOILR_TEMPLATE_NAME}}" -f
+
+  remove-ds-store:
+    desc: Remove all .DS_Store files
+    internal: true
+    cmds:
+      - find . -name .DS_Store -type f -delete
+
+  test:
+    desc: Test the boilr template
+    deps: [remove-ds-store, test:cleanup]
+    cmds:
+      - boilr template save . "{{.BOILR_TEMPLATE_TEST_NAME}}" -f
+      - boilr template use "{{.BOILR_TEMPLATE_TEST_NAME}}" "../{{.BOILR_TEMPLATE_TEST_NAME}}" -f
+      - git -C "../{{.BOILR_TEMPLATE_TEST_NAME}}" init
+      - git -C "../{{.BOILR_TEMPLATE_TEST_NAME}}" add .
+      - git -C "../{{.BOILR_TEMPLATE_TEST_NAME}}" commit -m "Initial commit"
+      - git -C "../{{.BOILR_TEMPLATE_TEST_NAME}}" remote add origin git@github.com:Ilyes512/laravel-project-test.git
+      - git -C "../{{.BOILR_TEMPLATE_TEST_NAME}}" fetch
+      - git -C "../{{.BOILR_TEMPLATE_TEST_NAME}}" branch --set-upstream-to=origin/main main
+      - code "../{{.BOILR_TEMPLATE_TEST_NAME}}"
+
+  test:interactive:
+    desc: Test the boilr template interactivly
+    deps: [remove-ds-store, test:cleanup]
+    interactive: true
+    cmds:
+      - boilr template save . "{{.BOILR_TEMPLATE_TEST_NAME}}" -f
+      - boilr template use "{{.BOILR_TEMPLATE_TEST_NAME}}" "../{{.BOILR_TEMPLATE_TEST_NAME}}"
+      - git -C "../{{.BOILR_TEMPLATE_TEST_NAME}}" init
+      - git -C "../{{.BOILR_TEMPLATE_TEST_NAME}}" add .
+      - git -C "../{{.BOILR_TEMPLATE_TEST_NAME}}" commit -m "Initial commit"
+      - git -C "../{{.BOILR_TEMPLATE_TEST_NAME}}" remote add origin git@github.com:Ilyes512/laravel-project-test.git
+      - git -C "../{{.BOILR_TEMPLATE_TEST_NAME}}" fetch
+      - git -C "../{{.BOILR_TEMPLATE_TEST_NAME}}" branch --set-upstream-to=origin/main main
+      - code "../{{.BOILR_TEMPLATE_TEST_NAME}}"
+
+  test:cleanup:
+    desc: Cleanup boilr template test files
+    dir: ..
+    status:
+       - test ! -d "{{.BOILR_TEMPLATE_TEST_NAME}}"
+    cmds:
+      - cd "{{.BOILR_TEMPLATE_TEST_NAME}}" && task down
+      - rm -rf "{{.BOILR_TEMPLATE_TEST_NAME}}"
+      - boilr template delete "{{.BOILR_TEMPLATE_TEST_NAME}}"
