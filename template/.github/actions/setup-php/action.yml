@@ -26,7 +26,13 @@ runs:
     - name: Setup PHP
       uses: shivammathur/setup-php@2.30.2
       with:
+      {{- if eq PhpVersion "8.3"}}
+        php-version: "8.3"
+      {{- else if eq PhpVersion "8.2"}}
+        php-version: "8.2"
+      {{- else}}
         php-version: "8.4"
+      {{- end}}
         coverage: {{`${{ inputs.coverage }}`}}
 
     - name: Install dependencies

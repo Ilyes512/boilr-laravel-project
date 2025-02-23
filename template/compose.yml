@@ -33,7 +33,7 @@ services:
     environment:
       CGI_HOST: "php.${COMPOSE_PROJECT_NAME}_default"
     labels:
-      - dev.orbstack.domains=foobar.local
+      - dev.orbstack.domains={{kebabcase ProjectShortName}}.local
       - dev.orbstack.http-port=80
 
   mariadb:
@@ -44,15 +44,15 @@ services:
       MARIADB_USER: ${MARIADB_USER}
       MARIADB_PASSWORD: ${MARIADB_PASSWORD}
     labels:
-      - dev.orbstack.domains=db.foobar.local
+      - dev.orbstack.domains=db.{{kebabcase ProjectShortName}}.local
 
   redis:
     image: redis:7.4.2-bookworm
     labels:
-      - dev.orbstack.domains=redis.foobar.local
+      - dev.orbstack.domains=redis.{{kebabcase ProjectShortName}}.local
 
   mailpit:
     image: axllent/mailpit:v1.22.3
     labels:
-      - dev.orbstack.domains=mail.foobar.local
+      - dev.orbstack.domains=mail.{{kebabcase ProjectShortName}}.local
       - dev.orbstack.http-port=8025
