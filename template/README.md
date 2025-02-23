@@ -31,6 +31,7 @@ running.
 | Application url  | <http://localhost:8080> | <http://foobar.local>      |
 | Mailpit url      | <http://localhost:8025> | <http://mail.foobar.local> |
 | MariDB host port | `localhost:3306`        | `db.foobar.local`          |
+| Redis host port  | `localhost:6379`        | `redis.foobar.local`       |
 
 > [!TIP]
 > If you are a macOS user and you are using OrbStack, you can navigate to <http://orb.local> to see the domains of all
