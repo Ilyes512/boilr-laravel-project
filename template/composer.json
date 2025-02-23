@@ -1,15 +1,22 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/laravel",
+    "name": "{{ComposerName}}",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "{{ProjectDescription}}",
     "keywords": [
         "laravel",
-        "framework"
+        "framework",
+        "{{kebabcase ProjectName}}"
     ],
-    "license": "MIT",
+    "license": "{{ComposerLicense}}",
     "require": {
+        {{- if eq PhpVersion "8.3"}}
+        "php": "^8.3",
+        {{- else if eq PhpVersion "8.2"}}
         "php": "^8.2",
+        {{- else}}
+        "php": "^8.4",
+        {{- end}}
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
         "webmozart/assert": "^1.11"
