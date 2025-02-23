@@ -1,7 +1,7 @@
 volumes:
-  foobar_composer:
+  {{snakecase ProjectShortName}}_composer:
     external: true
-  foobar_npm:
+  {{snakecase ProjectShortName}}_npm:
     external: true
   mariadb_data:
 
@@ -9,14 +9,14 @@ services:
   php:
     volumes:
       - ./:/var/www/
-      - foobar_composer:/home/code/.composer
-      - foobar_npm:/home/code/.npm
+      - {{snakecase ProjectShortName}}_composer:/home/code/.composer
+      - {{snakecase ProjectShortName}}_npm:/home/code/.npm
 
   worker:
     volumes:
       - ./:/var/www/
-      - foobar_composer:/home/code/.composer
-      - foobar_npm:/home/code/.npm
+      - {{snakecase ProjectShortName}}_composer:/home/code/.composer
+      - {{snakecase ProjectShortName}}_npm:/home/code/.npm
 
   nginx:
     volumes:

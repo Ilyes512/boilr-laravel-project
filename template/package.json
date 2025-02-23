@@ -1,5 +1,5 @@
 {
-    "name": "foobar",
+    "name": "{{kebabcase ProjectName}}",
     "private": true,
     "type": "module",
     "scripts": {
