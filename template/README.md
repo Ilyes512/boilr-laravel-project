@@ -54,3 +54,7 @@ start the project up again.
 
 To refresh the project when for instance you are switching to a different branch, run `task app:refresh`. This will for
 instance (re)fetch the composer and npm dependencies, run the migrations and rebuild the front-end assets
+
+#### Using Clockwork to debug the application
+
+Checkout <http://foboar.local/clockwork> to see the [clockwork](https://underground.works/clockwork/) dashboard.
