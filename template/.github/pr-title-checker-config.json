@@ -1,0 +1,9 @@
+{
+    "CHECKS": {
+        "regexp": "^{{IssuePrefix}}-\\d{0,6}:[ \t]+[^\\s]{1}.*$"
+    },
+    "MESSAGES": {
+        "success": "All OK",
+        "failure": "Please add {{IssuePrefix}}-XXX to your PR title where XXX is the issue number"
+    }
+}
