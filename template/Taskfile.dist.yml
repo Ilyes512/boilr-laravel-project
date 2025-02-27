@@ -7,7 +7,7 @@ vars:
   ORBSTACK_ENABLED:
     sh: test "$(docker context show)" = "orbstack" && echo 1 || echo 0
   ORB_APP_HOST: http://{{kebabcase ProjectShortName}}.local
-  DOCKER_CACHE_VOLUMES: {{snakecase ProjectShortName}}_composer {{snakecase ProjectShortName}}_npm
+  DOCKER_CACHE_VOLUMES: [ {{snakecase ProjectShortName}}_composer, {{snakecase ProjectShortName}}_npm ]
   # Latest version of MarkdownLint:
   #   - https://hub.docker.com/r/markdownlint/markdownlint/tags; or
   #   - https://github.com/markdownlint/markdownlint/tags
