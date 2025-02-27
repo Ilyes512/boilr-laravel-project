@@ -1,0 +1,53 @@
+name: Setup PHP
+
+inputs:
+  coverage:
+    description: Set PHP coverage driver
+    type: string
+    default: "none"
+
+runs:
+  using: composite
+  steps:
+    - name: Get composer cache directory
+      id: composer-cache-dir
+      shell: bash
+      run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+    - name: Restore Composer cache
+      id: composer-cache
+      uses: actions/cache/restore@v4.2.0
+      with:
+        path: |
+          {{`${{ steps.composer-cache-dir.outputs.dir }}`}}
+          vendor
+        key: composer-{{`${{ hashFiles('**/composer.lock') }}`}}
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@2.30.2
+      with:
+      {{- if eq PhpVersion "8.3"}}
+        php-version: "8.3"
+      {{- else if eq PhpVersion "8.2"}}
+        php-version: "8.2"
+      {{- else}}
+        php-version: "8.4"
+      {{- end}}
+        coverage: {{`${{ inputs.coverage }}`}}
+
+    - name: Install dependencies
+      if: steps.composer-cache.outputs.cache-hit != 'true'
+      shell: bash
+      run: composer install
+
+    - name: Copy .env.example to .env
+      shell: bash
+      run: cp .env.example .env
+
+    - name: Copy .env.testing.example to .env.testing
+      shell: bash
+      run: cp .env.testing.example .env.testing
+
+    - name: Update .env.testing DB_HOST
+      shell: bash
+      run: sed -i 's#^\(DB_HOST=\).*#\1127.0.0.1#' .env.testing

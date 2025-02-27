@@ -1,0 +1,110 @@
+{
+    "$schema": "https://getcomposer.org/schema.json",
+    "name": "{{ComposerName}}",
+    "type": "project",
+    "description": "{{ProjectDescription}}",
+    "keywords": [
+        "laravel",
+        "framework",
+        "{{kebabcase ProjectName}}"
+    ],
+    "license": "{{ComposerLicense}}",
+    "require": {
+        {{- if eq PhpVersion "8.3"}}
+        "php": "^8.3",
+        {{- else if eq PhpVersion "8.2"}}
+        "php": "^8.2",
+        {{- else}}
+        "php": "^8.4",
+        {{- end}}
+        "laravel/framework": "^12.0",
+        "laravel/tinker": "^2.10.1",
+        "webmozart/assert": "^1.11"
+    },
+    "require-dev": {
+        "barryvdh/laravel-ide-helper": "^3.5",
+        "dg/bypass-finals": "^1.9",
+        "fakerphp/faker": "^1.23",
+        "ilyes512/code-style": "^3.0",
+        "itsgoingd/clockwork": "^5.3",
+        "larastan/larastan": "^3",
+        "mockery/mockery": "^1.6",
+        "nunomaduro/collision": "^8.6",
+        "phpstan/extension-installer": "^1.4",
+        "phpstan/phpstan-mockery": "^2.0",
+        "phpstan/phpstan-strict-rules": "^2.0",
+        "phpstan/phpstan-webmozart-assert": "^2.0",
+        "phpunit/phpunit": "^11.5.3",
+        "shipmonk/phpstan-rules": "^4.0",
+        "spatie/phpunit-snapshot-assertions": "^5.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover --ansi",
+            "[ \"$COMPOSER_DEV_MODE\" = \"1\" ] && $PHP_BINARY artisan ide-helper:generate || true",
+            "[ \"$COMPOSER_DEV_MODE\" = \"1\" ] && $PHP_BINARY artisan ide-helper:meta || true"
+        ],
+        "post-update-cmd": [
+            "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
+        ],
+        "checkall": [
+            "composer validate",
+            "@checkstyle",
+            "@checktype",
+            "@test"
+        ],
+        "test": [
+            "Composer\\Config::disableProcessTimeout",
+            "XDEBUG_MODE=off phpunit -d --without-creating-snapshots"
+        ],
+        "test-report": [
+            "Composer\\Config::disableProcessTimeout",
+            "XDEBUG_MODE=off php -dpcov.enabled=1 -dpcov.directory=. vendor/bin/phpunit -d --without-creating-snapshots --coverage-text --coverage-html coverage/html"
+        ],
+        "checkstyle": "XDEBUG_MODE=off phpcs -n",
+        "fixstyle": "XDEBUG_MODE=off phpcbf -n",
+        "checktype": "XDEBUG_MODE=off phpstan analyse --memory-limit=-1 -v",
+        "update-type-baseline": "XDEBUG_MODE=off phpstan --generate-baseline",
+        "update-test-snapshots": "XDEBUG_MODE=off vendor/bin/phpunit -d --update-snapshots"
+    },
+    "extra": {
+        "laravel": {
+            "dont-discover": []
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "php-http/discovery": true,
+            "phpstan/extension-installer": true
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "scripts-descriptions": {
+        "checkall": "Run all checks including tests",
+        "test": "Run PHPUnit tests",
+        "test-report": "Run PHPUnit tests with coverage report",
+        "checkstyle": "Check code style using php_codesniffer",
+        "fixstyle": "Fix code style using php_codesniffer",
+        "checktype": "Check code type using PHPStan",
+        "update-type-baseline": "Update PHPStan baseline",
+        "update-test-snapshots": "Update PHPUnit snapshots"
+    }
+}

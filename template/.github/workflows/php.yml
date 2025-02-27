@@ -1,0 +1,171 @@
+name: PHP
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: {{`${{ github.workflow }}`}}-{{`${{ github.ref }}`}}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  composer-install:
+    name: Composer Install
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.2.2
+
+      - name: Get composer cache directory
+        id: composer-cache-dir
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache Composer dependencies
+        id: composer-cache
+        uses: actions/cache@v4.2.0
+        with:
+          path: |
+            {{`${{ steps.composer-cache-dir.outputs.dir }}`}}
+            vendor
+          key: composer-{{`${{ hashFiles('**/composer.lock') }}`}}
+          restore-keys: composer-
+
+      - name: Setup PHP
+        if: steps.composer-cache.outputs.cache-hit != 'true'
+        uses: shivammathur/setup-php@2.32.0
+        with:
+        {{- if eq PhpVersion "8.3"}}
+          php-version: "8.3"
+        {{- else if eq PhpVersion "8.2"}}
+          php-version: "8.2"
+        {{- else}}
+          php-version: "8.4"
+        {{- end}}
+
+      - name: Validate composer.json and composer.lock
+        if: steps.composer-cache.outputs.cache-hit != 'true'
+        run: composer validate
+
+      - name: Install dependencies
+        if: steps.composer-cache.outputs.cache-hit != 'true'
+        run: composer install
+
+  tests:
+    name: PHPUnit tests
+    runs-on: ubuntu-24.04
+    needs: [composer-install]
+    services:
+      mariadb:
+        image: mariadb:11.7.2-noble
+        env:
+          MARIADB_DATABASE: "{{snakecase ProjectShortName}}_test"
+          MARIADB_USER: "{{snakecase ProjectShortName}}_test"
+          MARIADB_PASSWORD: password
+          MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: "yes"
+        ports:
+          - 3306:3306
+        options: --health-cmd="mariadb-admin ping" --health-interval=5s --health-timeout=2s --health-retries=3
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: Setup PHP
+        uses: ./.github/actions/setup-php
+        with:
+          coverage: pcov
+
+      - name: Run migrations
+        run: php artisan --env=testing migrate:fresh --seed
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install NPM dependencies
+        run: npm ci
+
+      - name: Run NPM production build
+        run: npm run build
+
+      - name: Run PHPUnit tests
+        run: php -dpcov.enabled=1 -dpcov.directory=. vendor/bin/phpunit --coverage-text --show-uncovered-for-coverage-text
+
+  checkstyle:
+    name: Checkstyle
+    runs-on: ubuntu-24.04
+    needs: [composer-install]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.2.2
+
+      - name: Setup PHP
+        uses: ./.github/actions/setup-php
+
+      - name: Run composer checkstyle
+        run: composer checkstyle
+
+  checktype:
+    name: Checktype
+    runs-on: ubuntu-24.04
+    needs: [composer-install]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.2.2
+
+      - name: Setup PHP
+        uses: ./.github/actions/setup-php
+
+      - name: Run composer checktype
+        run: composer checktype
+
+  checkdocblocks:
+    name: Check Model DocBlocks
+    runs-on: ubuntu-24.04
+    needs: [composer-install]
+    services:
+      mariadb:
+        image: mariadb:11.7.2-noble
+        env:
+          MARIADB_DATABASE: "{{snakecase ProjectShortName}}_test"
+          MARIADB_USER: "{{snakecase ProjectShortName}}_test"
+          MARIADB_PASSWORD: password
+          MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: "yes"
+        ports:
+          - 3306:3306
+        options: --health-cmd="mariadb-admin ping" --health-interval=5s --health-timeout=2s --health-retries=3
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.2.2
+
+      - name: Setup PHP
+        uses: ./.github/actions/setup-php
+
+      - name: Run migrations
+        run: php artisan --env=testing migrate:fresh --seed
+
+      - name: Generate Model DocBlocks
+        run: php artisan ide-helper:models --write
+
+      - name: Check for changes in models directory
+        run: |
+          if ! git diff --quiet -- app/Models/; then
+            echo "Changes detected in the models directory after running IDE Helper Generate."
+            echo "Please run "php artisan ide-helper:models --write" locally and review and commit the changes."
+            echo "Make sure your local database is up to date and the migrations are in sync with the database."
+            exit 1
+          fi
+        shell: bash

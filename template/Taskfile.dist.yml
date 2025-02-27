@@ -1,0 +1,345 @@
+# https://taskfile.dev
+version: "3"
+
+vars:
+  BASE_PATH:
+    sh: pwd
+  ORBSTACK_ENABLED:
+    sh: test "$(docker context show)" = "orbstack" && echo 1 || echo 0
+  ORB_APP_HOST: http://{{kebabcase ProjectShortName}}.local
+  DOCKER_CACHE_VOLUMES: {{snakecase ProjectShortName}}_composer {{snakecase ProjectShortName}}_npm
+  # Latest version of MarkdownLint:
+  #   - https://hub.docker.com/r/markdownlint/markdownlint/tags; or
+  #   - https://github.com/markdownlint/markdownlint/tags
+  MARKDOWNLINT_VERSION: v0.17.2
+
+# env:
+#   BUILDKIT_PROGRESS: plain
+
+silent: true
+
+tasks:
+  dc:
+    vars:
+      FIXUID:
+        sh: echo ${FIXUID:-$(id -u)}
+      FIXGID:
+        sh: echo ${FIXGID:-$(id -g)}
+    cmds:
+      - >-
+        FIXUID={{`{{.FIXUID}}`}} FIXGID={{`{{.FIXGID}}`}}
+        docker compose
+        --file compose.yml
+        --file compose.mounts.yml
+        {{`{{ if eq .ORBSTACK_ENABLED "0" }}`}}
+        --file compose.ports.yml
+        {{`{{ end }}`}}
+        {{`{{.DOCKER_COMPOSE_ARGS}}`}} {{`{{.CLI_ARGS}}`}}
+
+  dc:run:
+    interactive: true
+    cmds:
+      - task: dc
+        vars: { DOCKER_COMPOSE_ARGS: "run --rm --user $(id -u):$(id -g)", CLI_ARGS: "{{`{{.CLI_ARGS}}`}}" }
+
+  dc:run:artisan:
+    interactive: true
+    cmds:
+      - task: dc:run
+        vars: { CLI_ARGS: "php php artisan {{`{{.CLI_ARGS}}`}}" }
+
+  dc:run:composer:
+    interactive: true
+    cmds:
+      - task: dc:run
+        vars: { CLI_ARGS: "--env=COMPOSER_DISABLE_XDEBUG_WARN=1 php composer {{`{{.CLI_ARGS}}`}}" }
+
+  setup:
+    desc: Setup development environment
+    cmds:
+      - for: { var: DOCKER_CACHE_VOLUMES }
+        cmd: docker volume create {{`{{.ITEM}}`}}
+      - task: env
+      - task: env:testing
+      - task: build
+      - task: composer:install
+      - task: npm:install
+      - task: dc
+        vars: { DOCKER_COMPOSE_ARGS: "up -d", CLI_ARGS: "" }
+      - task: dc:run:artisan
+        vars: { CLI_ARGS: "key:generate" }
+      - task: dc:run:artisan
+        vars: { CLI_ARGS: "storage:link --quiet" }
+      - task: dc:run
+        vars: { CLI_ARGS: "php bash -c 'wait-for-it mariadb:3306 --timeout=0 --strict -- echo \"Done waiting\"'" }
+      - task: app:migrate-fresh
+      - task: app:migrate-fresh:test
+      - task: npm:build
+
+  setup:if-not-exist:
+    vars:
+      PROJECT_EXISTS:
+        sh: 'docker compose ps --all --services'
+    status:
+      - test ! -z "{{`{{.PROJECT_EXISTS}}`}}"
+    cmds:
+      - task: setup
+
+  env:
+    desc: Template .env
+    run: once
+    cmds:
+      - cp .env.example .env
+      - cmd: |
+          if [ "{{`{{.ORBSTACK_ENABLED }}`}}" = "1" ]; then
+            sed -i '' 's#^\(APP_URL=\).*#\1{{`{{.ORB_APP_HOST}}`}}#' .env
+          fi
+        platforms: [darwin]
+    sources:
+      - .env.example
+    generates:
+      - .env
+
+  env:testing:
+    desc: Template .env.testing
+    run: once
+    cmds:
+      - cp .env.testing.example .env.testing
+    sources:
+      - .env.testing.example
+    generates:
+      - .env.testing
+
+  build:
+    desc: Build all docker images
+    deps: [env]
+    cmds:
+      - task: dc
+        vars: { DOCKER_COMPOSE_ARGS: "build --build-arg USER_UID=$(id -u)" }
+
+  up:
+    desc: Start development environment
+    cmds:
+      - task: env
+      - task: env:testing
+      - task: setup:if-not-exist
+      - task: dc
+        vars: { DOCKER_COMPOSE_ARGS: "up -d" }
+
+  stop:
+    desc: Stop development environment
+    cmds:
+      - task: dc
+        vars: { DOCKER_COMPOSE_ARGS: "stop" }
+
+  restart:
+    desc: Restart development environment
+    cmds:
+      - task: stop
+      - task: up
+
+  down:
+    desc: Down the development environment
+    cmds:
+      - task: dc
+        vars: { DOCKER_COMPOSE_ARGS: "down --volumes --remove-orphans" }
+
+  reset:
+    desc: Reset the development environment
+    cmds:
+      - task: down
+      - task: up
+
+  ps:
+    desc: Show all project container (including stopped ones)
+    aliases: [status]
+    cmds:
+      - task: dc
+        vars: { DOCKER_COMPOSE_ARGS: "ps -a" }
+
+  logs:
+    desc: Show logs of all project containers
+    cmds:
+      - task: dc
+        vars: { DOCKER_COMPOSE_ARGS: "logs -f" }
+
+  shell:
+    desc: Open shell in php container
+    cmds:
+      - task: dc
+        vars: { DOCKER_COMPOSE_ARGS: "exec php bash" }
+
+  checkall:
+    desc: Run all checks
+    cmds:
+      - task: dc:run:composer
+        vars: { CLI_ARGS: "run checkall" }
+      - task: md:checkstyle
+
+  composer:install:
+    desc: Install composer dependencies
+    cmds:
+      - task: dc:run:composer
+        vars: { CLI_ARGS: "install" }
+
+  composer:update-lockfile:
+    desc: Update composer lock file
+    cmds:
+      - task: dc:run:composer
+        vars: { CLI_ARGS: "update --lock" }
+
+  composer:update:
+    desc: Install composer dependencies (including all dependencies)
+    cmds:
+      - task: dc:run:composer
+        vars: { CLI_ARGS: "update --with-all-dependencies" }
+
+  composer:validate:
+    desc: Validate composer.json
+    cmds:
+      - task: dc:run:composer
+        vars: { CLI_ARGS: "validate" }
+
+  composer:checkstyle:
+    desc: Check code style using php_codesniffer
+    cmds:
+      - task: dc:run:composer
+        vars: { CLI_ARGS: "run checkstyle" }
+
+  composer:fixstyle:
+    desc: Fix code style using php_codesniffer
+    cmds:
+      - task: dc:run:composer
+        vars: { CLI_ARGS: "run fixstyle" }
+
+  composer:test:
+    desc: Run PHPUnit tests
+    cmds:
+      - task: dc:run:composer
+        vars: { CLI_ARGS: "run test" }
+
+  composer:test-report:
+    desc: Run PHPUnit tests with coverage report
+    cmds:
+      - task: dc:run:composer
+        vars: { CLI_ARGS: "run test-report" }
+
+  composer:update-test-snapshots:
+    desc: Update PHPUnit snapshots
+    cmds:
+      - task: dc:run:composer
+        vars: { CLI_ARGS: "run update-test-snapshots" }
+
+  composer:checktype:
+    desc: Check code type using PHPStan
+    cmds:
+      - task: dc:run:composer
+        vars: { CLI_ARGS: "run checktype" }
+
+  composer:update-type-baseline:
+    desc: Update PHPStan baseline
+    cmds:
+      - task: dc:run:composer
+        vars: { CLI_ARGS: "run update-type-baseline" }
+
+  npm:install:
+    desc: Install node dependencies
+    cmds:
+      - task: dc:run
+        vars: { CLI_ARGS: "php npm ci" }
+
+  npm:update:
+    desc: Update node dependencies
+    cmds:
+      - task: dc:run
+        vars: { CLI_ARGS: "php npm update" }
+
+  npm:build:
+    desc: Build assets
+    cmds:
+      - task: dc:run
+        vars: { CLI_ARGS: "php npm run build" }
+
+  app:migrate:
+    desc: Run migrations
+    vars:
+      APP_ENV: '{{`{{default "local" .APP_ENV}}`}}'
+    cmds:
+      - task: dc:run:artisan
+        vars: { CLI_ARGS: "migrate --env={{`{{.APP_ENV}}`}}" }
+
+  app:migrate-fresh:
+    desc: Run fresh migrations with seeders
+    cmds:
+      - task: dc:run:artisan
+        vars: { CLI_ARGS: "migrate:fresh --env=local --seed" }
+
+  db:reset-users:
+    desc: Truncates users and token table and seeds default test users
+    cmds:
+      - task: dc:run:artisan
+        vars: { CLI_ARGS: "db:seed ResetToTestUsersSeeder" }
+
+  app:migrate-fresh:test:
+    desc: Run fresh migrations with seeders for testing environment
+    cmds:
+      - task: dc:run:artisan
+        vars: { CLI_ARGS: "migrate:fresh --env=testing --seed" }
+
+  app:refresh:
+    desc: Refresh the application
+    cmds:
+      # - task: env # for now comment because user might lose existing .env values... will add a "smarter" way to do this later
+      - task: env:testing
+      - task: composer:install
+      - task: npm:install
+      # We are only adding new migrations and not running migrate:refresh so we don't lose our data for the dev environment:
+      - task: app:migrate
+      - task: app:migrate-fresh:test
+      - task: dc:run:artisan
+        vars: { CLI_ARGS: "icons:cache" }
+      - task: npm:build
+
+  md:checkstyle:
+    desc: Check style of Markdown files
+    cmds:
+      - docker run
+        --interactive
+        --tty
+        --rm
+        --volume $(pwd):/workdir
+        davidanson/markdownlint-cli2:{{`{{.MARKDOWNLINT_VERSION}}`}}
+        {{`{{.CLI_ARGS}}`}}
+
+  md:fixstyle:
+    desc: Fix style of Markdown files
+    cmds:
+      - task: md:checkstyle
+        vars: { CLI_ARGS: --fix }
+
+  cleanup:
+    desc: Cleanup of almost all gitignored files and untracked files
+    prompt: This could potentially delete untracked files!! Do you want to continue?
+    summary: |
+      Cleanup of almost all gitignored files and untracked files
+
+      The following files/dirs are excluded:
+        - /.idea
+    cmds:
+      - git clean
+        -xd
+        --force
+        --exclude .idea
+
+  cleanup:all:
+    desc: Cleanup of almost all gitignored files, untracked files and dev containers
+    summary: |
+      Cleanup of almost all gitignored files, untracked files and development containers.
+
+      The following files/dirs are excluded:
+        - /.idea
+    cmds:
+      - task: down
+      - for: { var: DOCKER_CACHE_VOLUMES }
+        cmd: docker volume rm {{`{{.ITEM}}`}} || true
+      - task: cleanup

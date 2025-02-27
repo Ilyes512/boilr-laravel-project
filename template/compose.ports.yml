@@ -1,0 +1,16 @@
+services:
+  nginx:
+    ports:
+      - ${NGINX_PORT:-8080}:80
+
+  mariadb:
+    ports:
+      - ${MARIADB_PORT:-3306}:3306
+
+  redis:
+    ports:
+      - ${REDIS_PORT:-6379}:6379
+
+  mailpit:
+    ports:
+      - ${MAILPIT_PORT:-8025}:8025

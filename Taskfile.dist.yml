@@ -11,19 +11,30 @@ tasks:
 
   update:
     desc: Update the boilr template
-    deps: [remove-ds-store]
+    deps: [cleanup:ignored]
     cmds:
       - boilr template save . "{{.BOILR_TEMPLATE_NAME}}" -f
 
-  remove-ds-store:
-    desc: Remove all .DS_Store files
+  cleanup:ignored:
+    desc: Remove all git ignored files
     internal: true
     cmds:
-      - find . -name .DS_Store -type f -delete
+      - git clean -Xdf
+
+  cleanup:
+    desc: Cleanup of almost all git gitignored files and untracked files
+    prompt: This could potentially delete untracked files!! Do you want to continue?
+    cmds:
+      - git clean -xd --force
+
+  cleanup:dry-run:
+    desc: Display all files that are either ignored or untracked
+    cmds:
+      - git clean -xdn
 
   test:
     desc: Test the boilr template
-    deps: [remove-ds-store, test:cleanup]
+    deps: [cleanup:ignored, test:cleanup]
     cmds:
       - boilr template save . "{{.BOILR_TEMPLATE_TEST_NAME}}" -f
       - boilr template use "{{.BOILR_TEMPLATE_TEST_NAME}}" "../{{.BOILR_TEMPLATE_TEST_NAME}}" -f
@@ -37,7 +48,7 @@ tasks:
 
   test:interactive:
     desc: Test the boilr template interactivly
-    deps: [remove-ds-store, test:cleanup]
+    deps: [cleanup:ignored, test:cleanup]
     interactive: true
     cmds:
       - boilr template save . "{{.BOILR_TEMPLATE_TEST_NAME}}" -f
@@ -56,6 +67,6 @@ tasks:
     status:
        - test ! -d "{{.BOILR_TEMPLATE_TEST_NAME}}"
     cmds:
-      - cd "{{.BOILR_TEMPLATE_TEST_NAME}}" && task down
+      - cd "{{.BOILR_TEMPLATE_TEST_NAME}}" && task down && task down
       - rm -rf "{{.BOILR_TEMPLATE_TEST_NAME}}"
       - boilr template delete "{{.BOILR_TEMPLATE_TEST_NAME}}"
