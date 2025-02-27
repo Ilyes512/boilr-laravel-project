@@ -16,7 +16,7 @@ runs:
 
     - name: Restore Composer cache
       id: composer-cache
-      uses: actions/cache/restore@v4.2.0
+      uses: actions/cache/restore@v4.2.2
       with:
         path: |
           {{`${{ steps.composer-cache-dir.outputs.dir }}`}}
