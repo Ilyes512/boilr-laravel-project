@@ -12,5 +12,6 @@
         "MIT",
         "proprietary"
     ],
-    "IssuePrefix": "ACM"
+    "IssuePrefix": "ACM",
+    "UseSonarQube": true
 }

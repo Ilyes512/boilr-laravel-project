@@ -187,3 +187,29 @@ jobs:
             exit 1
           fi
         shell: bash
+{{if UseSonarQube}}
+  sonarqube:
+    name: SonarQube
+    runs-on: ubuntu-24.04
+    needs: [tests, checktype]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+
+      - name: Download PHPUnit coverage report
+        uses: actions/download-artifact@v4
+        with:
+          name: phpunit-report
+
+      - name: Download PHPStan analysis report
+        uses: actions/download-artifact@v4
+        with:
+          name: phpstan-report
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: {{`${{ secrets.SONAR_TOKEN }}`}}
+{{- end}}
