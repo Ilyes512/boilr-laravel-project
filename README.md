@@ -1,6 +1,6 @@
 # Ilyes512/boilr-laravel-project
 
-A [Boilr](https://github.com/Ilyes512/boilr) template for PHP Laravel projects.
+A [Boilr](https://github.com/Ilyes512/boilr) template for PHP Laravel 11 projects.
 
 ## Install/Usage instructions
 
