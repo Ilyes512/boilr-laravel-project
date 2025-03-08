@@ -22,7 +22,8 @@ also want "Coverage analysus" we want to change the "Analysis Method" to non-aut
 toggle).
 
 Finally in the same screen press on "With Github Actions" and follow the instructions. It will guide you through the
-process of adding the `SONAR_TOKEN` to your Github repository secrets.
+process of adding the `SONAR_TOKEN` to your Github repository secrets. Remember to also add the `SONAR_TOKEN` to the
+Dependabot secrets. It's a separate page with it own secerts.
 
 The last step is to add the `sonar-project.properties` file to your project. This file should be placed in the root of
 your project and should contain the following. You will also need to add the the job/workflow to your
