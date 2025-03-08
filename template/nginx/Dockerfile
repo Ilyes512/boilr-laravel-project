@@ -1,4 +1,14 @@
-FROM ghcr.io/ilyes512/php84:builder_nodejs-1.0.0 AS builder
+{{$dockerTag := "" }}
+
+{{- if eq PhpVersion "8.3"}}
+    {{- $dockerTag = "1.3.0" }}
+{{- else if eq PhpVersion "8.2"}}
+    {{- $dockerTag = "1.3.0" }}
+{{- else}}
+    {{- $dockerTag = "1.0.0" }}
+{{- end -}}
+
+FROM ghcr.io/ilyes512/php{{ PhpVersion | replace "."  "" }}:builder_nodejs-{{$dockerTag}} AS builder
 
 COPY --link ./composer.json ./composer.lock /var/www/
 

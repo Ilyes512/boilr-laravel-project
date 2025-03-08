@@ -40,7 +40,11 @@
                     {
                         "context": "Check Model DocBlocks",
                         "integration_id": 15368
-                    }
+                    }{{if UseSonarQube}},
+                    {
+                        "context": "SonarQube",
+                        "integration_id": 15368
+                    }{{end}}
                 ]
             }
         },
