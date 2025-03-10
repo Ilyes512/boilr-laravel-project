@@ -1,6 +1,16 @@
+{{$dockerTag := "" }}
+
+{{- if eq PhpVersion "8.3"}}
+    {{- $dockerTag = "1.3.0" }}
+{{- else if eq PhpVersion "8.2"}}
+    {{- $dockerTag = "1.3.0" }}
+{{- else}}
+    {{- $dockerTag = "1.0.0" }}
+{{- end -}}
+
 # syntax=docker/dockerfile:1
 
-FROM ghcr.io/ilyes512/php84:builder_nodejs-1.0.0 AS builder-composer-cache
+FROM ghcr.io/ilyes512/php{{ PhpVersion | replace "."  "" }}:builder_nodejs-{{$dockerTag}} AS builder-composer-cache
 
 ARG COMPOSER_AUTH
 
@@ -25,7 +35,7 @@ RUN npm run build
 
 RUN rm -rf package.json package-lock.json vite.config.js resources node_modules
 
-FROM ghcr.io/ilyes512/php84:builder-1.0.0 AS builder-files-cache
+FROM ghcr.io/ilyes512/php{{ PhpVersion | replace "."  "" }}:builder-{{$dockerTag}} AS builder-files-cache
 
 ARG COMPOSER_AUTH
 ARG TARGETARCH
@@ -42,7 +52,7 @@ ENV FIXUID_VERSION=0.6.0
 RUN curl -fsSLo /tmp/fixuid.tar.gz "https://github.com/boxboat/fixuid/releases/download/v$FIXUID_VERSION/fixuid-${FIXUID_VERSION}-linux-${TARGETARCH}.tar.gz" \
     && tar -xf /tmp/fixuid.tar.gz -C /usr/local/bin fixuid
 
-FROM ghcr.io/ilyes512/php84:builder_nodejs-1.0.0 AS builder
+FROM ghcr.io/ilyes512/php{{ PhpVersion | replace "."  "" }}:builder_nodejs-{{$dockerTag}} AS builder
 
 ARG USER=code
 ARG GROUP=code
@@ -106,7 +116,7 @@ RUN rm -rf \
     nginx \
     php
 
-FROM ghcr.io/ilyes512/php84:runtime-1.0.0 AS runtime
+FROM ghcr.io/ilyes512/php{{ PhpVersion | replace "."  "" }}:runtime-{{$dockerTag}} AS runtime
 
 COPY --link --from=runtime-files-cache /var/www /var/www
 
