@@ -11,7 +11,7 @@
 - [Task](https://taskfile.dev/installation/)
 
 > [!NOTE]
-j> With the above requirements installed you should be able to start your local development environment pretty easily on
+> With the above requirements installed you should be able to start your local development environment pretty easily on
 > Linux and MacOS. Windows users can follow the instructions in
 > [Windows Local Development Setup](docs/windows-local-development-setup.md).
 
