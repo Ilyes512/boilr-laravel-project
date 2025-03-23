@@ -13,5 +13,5 @@
         "proprietary"
     ],
     "IssuePrefix": "ACM",
-    "UseSonarQube": true
+    "UseSonarQube": false
 }
