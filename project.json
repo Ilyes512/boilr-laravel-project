@@ -1,7 +1,7 @@
 {
     "ProjectName": "My Acme Project",
     "ProjectShortName": "acme",
-    "ProjectDescription": "This Laravel project is scaffolded using Boilr-tool (https://github.com/Ilyes512/boilr) using the boilr-laravel-project-template (https://github.com/Ilyes512/boilr-laravel-project).",
+    "ProjectDescription": "This Laravel project is scaffolded using Boilr-tool (<https://github.com/Ilyes512/boilr>) using the boilr-laravel-project-template (<https://github.com/Ilyes512/boilr-laravel-project>).",
     "PhpVersion": [
         "8.4",
         "8.3",
@@ -12,5 +12,6 @@
         "MIT",
         "proprietary"
     ],
-    "IssuePrefix": "ACM"
+    "IssuePrefix": "ACM",
+    "UseSonarQube": false
 }

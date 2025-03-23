@@ -28,7 +28,7 @@ jobs:
 
       - name: Cache Composer dependencies
         id: composer-cache
-        uses: actions/cache@v4.2.2
+        uses: actions/cache@v4.2.3
         with:
           path: |
             {{`${{ steps.composer-cache-dir.outputs.dir }}`}}
@@ -89,7 +89,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
           cache: npm
 
       - name: Install NPM dependencies
@@ -99,7 +99,13 @@ jobs:
         run: npm run build
 
       - name: Run PHPUnit tests
-        run: php -dpcov.enabled=1 -dpcov.directory=. vendor/bin/phpunit --coverage-text --show-uncovered-for-coverage-text
+        run: php -dpcov.enabled=1 -dpcov.directory=. vendor/bin/phpunit --coverage-clover=phpunit-report.xml
+
+      - name: Upload PHPUnit coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: phpunit-report
+          path: phpunit-report.xml
 
   checkstyle:
     name: Checkstyle
@@ -128,8 +134,20 @@ jobs:
       - name: Setup PHP
         uses: ./.github/actions/setup-php
 
-      - name: Run composer checktype
-        run: composer checktype
+      - name: Run phpstan analyse
+        run: vendor/bin/phpstan analyse --memory-limit=-1 --error-format=github -vvv
+
+      - name: Generate PHPStan analysis report
+        id: phpstan-report
+        if: always()
+        run: vendor/bin/phpstan analyse --memory-limit=-1 --error-format=json > phpstan-report.json
+
+      - name: Upload PHPStan analysis report
+        if: steps.phpstan-report.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: phpstan-report
+          path: phpstan-report.json
 
   checkdocblocks:
     name: Check Model DocBlocks
@@ -169,3 +187,29 @@ jobs:
             exit 1
           fi
         shell: bash
+{{if UseSonarQube}}
+  sonarqube:
+    name: SonarQube
+    runs-on: ubuntu-24.04
+    needs: [tests, checktype]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+
+      - name: Download PHPUnit coverage report
+        uses: actions/download-artifact@v4
+        with:
+          name: phpunit-report
+
+      - name: Download PHPStan analysis report
+        uses: actions/download-artifact@v4
+        with:
+          name: phpstan-report
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: {{`${{ secrets.SONAR_TOKEN }}`}}
+{{- end}}
