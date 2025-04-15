@@ -58,4 +58,4 @@ instance (re)fetch the composer and npm dependencies, run the migrations and reb
 
 #### Using Clockwork to debug the application
 
-Checkout <http://foboar.local/clockwork> to see the [clockwork](https://underground.works/clockwork/) dashboard.
+Checkout <http://{{kebabcase ProjectShortName}}.local/clockwork> to see the [clockwork](https://underground.works/clockwork/) dashboard.
