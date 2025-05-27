@@ -26,6 +26,7 @@
         "dg/bypass-finals": "^1.9",
         "fakerphp/faker": "^1.23",
         "ilyes512/code-style": "^3.0",
+        "ilyes512/laravel-dump-server": "^1.10",
         "itsgoingd/clockwork": "^5.3",
         "larastan/larastan": "^3",
         "mockery/mockery": "^1.6",

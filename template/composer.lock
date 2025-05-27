@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "330af4cfebd235a2d5b3a63251ee2048",
+    "content-hash": "c1352494d6379c16765a8e88e83a75cd",
     "packages": [
         {
             "name": "brick/math",
@@ -6485,6 +6485,72 @@
                 "source": "https://github.com/Ilyes512/code-style/tree/3.0.0"
             },
             "time": "2025-03-19T21:49:54+00:00"
+        },
+        {
+            "name": "ilyes512/laravel-dump-server",
+            "version": "1.10.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Ilyes512/laravel-dump-server.git",
+                "reference": "3c020693cd9840d142cb369816e43dfe02be708c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Ilyes512/laravel-dump-server/zipball/3c020693cd9840d142cb369816e43dfe02be708c",
+                "reference": "3c020693cd9840d142cb369816e43dfe02be708c",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/console": "^6.0|^7.0|^8.0|^9.0|^10.0|^11.0|^12.0",
+                "illuminate/http": "^6.0|^7.0|^8.0|^9.0|^10.0|^11.0|^12.0",
+                "illuminate/support": "^6.0|^7.0|^8.0|^9.0|^10.0|^11.0|^12.0",
+                "php": ">=7.2.5",
+                "symfony/var-dumper": "^5.0|^6.0|^7.0"
+            },
+            "replace": {
+                "beyondcode/laravel-dump-server": "*"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^10.5"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Ilyes512\\DumpServer\\DumpServerServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "files": [
+                    "helpers.php"
+                ],
+                "psr-4": {
+                    "Ilyes512\\DumpServer\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marcel Pociot",
+                    "email": "marcel@beyondco.de",
+                    "homepage": "https://beyondco.de",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Symfony Var-Dump Server for Laravel",
+            "homepage": "https://github.com/ilyes512/laravel-dump-server",
+            "keywords": [
+                "laravel-dump-server"
+            ],
+            "support": {
+                "issues": "https://github.com/Ilyes512/laravel-dump-server/issues",
+                "source": "https://github.com/Ilyes512/laravel-dump-server/tree/1.10.0"
+            },
+            "time": "2025-04-16T20:25:02+00:00"
         },
         {
             "name": "itsgoingd/clockwork",
