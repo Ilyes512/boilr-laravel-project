@@ -9,9 +9,9 @@ vars:
   ORB_APP_HOST: https://{{kebabcase ProjectShortName}}.local
   DOCKER_CACHE_VOLUMES: [ {{snakecase ProjectShortName}}_composer, {{snakecase ProjectShortName}}_npm ]
   # Latest version of MarkdownLint:
-  #   - https://hub.docker.com/r/markdownlint/markdownlint/tags; or
-  #   - https://github.com/markdownlint/markdownlint/tags
-  MARKDOWNLINT_VERSION: v0.17.2
+  #   - https://hub.docker.com/r/davidanson/markdownlint-cli2/tags
+  #   - https://github.com/DavidAnson/markdownlint-cli2/tags
+  MARKDOWNLINT_VERSION: v0.18.1
 
 # env:
 #   BUILDKIT_PROGRESS: plain
