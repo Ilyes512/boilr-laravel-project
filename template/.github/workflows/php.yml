@@ -83,14 +83,17 @@ jobs:
         with:
           coverage: pcov
 
-      - name: Run migrations
-        run: php artisan --env=testing migrate:fresh --seed
-
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: "22"
           cache: npm
+
+      - name: Run composer dump-autoload
+        run: composer dump-autoload
+
+      - name: Run migrations
+        run: php artisan --env=testing migrate:fresh --seed
 
       - name: Install NPM dependencies
         run: npm ci
