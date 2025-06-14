@@ -9,8 +9,8 @@
     ],
     "RepoName": "acme/project",
     "ComposerLicense": [
-        "MIT",
-        "proprietary"
+        "proprietary",
+        "MIT"
     ],
     "IssuePrefix": "ACM",
     "UseSonarQube": false
