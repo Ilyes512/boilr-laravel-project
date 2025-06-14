@@ -97,11 +97,11 @@ return [
             ],
         ],
 
-        'local' => [
+        'mailpit' => [
             'transport' => 'smtp',
-            'host' => env('MAIL_HOST', 'mailpit'),
-            'port' => env('MAIL_PORT', 1025),
-            'encryption' => null,
+            'host' => 'mailpit',
+            'port' => 1025,
+            'encryption' => 'tls',
             'username' => null,
             'password' => null,
             'timeout' => null,
