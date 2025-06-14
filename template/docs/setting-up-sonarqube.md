@@ -23,7 +23,10 @@ toggle).
 
 Finally in the same screen press on "With Github Actions" and follow the instructions. It will guide you through the
 process of adding the `SONAR_TOKEN` to your Github repository secrets. Remember to also add the `SONAR_TOKEN` to the
-Dependabot secrets. It's a separate page with it own secerts.
+Dependabot secrets. It's a separate page with it own secrets.
+
+- [New Action secret](https://github.com/{{RepoName}}/settings/secrets/actions/new)
+- [New Dependabot secret](https://github.com/{{RepoName}}/settings/secrets/dependabot/new)
 
 The last step is to add the `sonar-project.properties` file to your project. This file should be placed in the root of
 your project and should contain the following. You will also need to add the the job/workflow to your
