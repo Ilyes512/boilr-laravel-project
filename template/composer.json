@@ -74,7 +74,7 @@
         ],
         "test-report": [
             "Composer\\Config::disableProcessTimeout",
-            "XDEBUG_MODE=off php -dpcov.enabled=1 -dpcov.directory=. vendor/bin/phpunit -d --without-creating-snapshots --coverage-text --coverage-html coverage/html"
+            "XDEBUG_MODE=off php -dpcov.enabled=1 -dpcov.directory=. vendor/bin/phpunit -d --without-creating-snapshots --coverage-text --show-uncovered-for-coverage-text --coverage-html coverage/html"
         ],
         "checkstyle": "XDEBUG_MODE=off phpcs -n",
         "fixstyle": "XDEBUG_MODE=off phpcbf -n",
