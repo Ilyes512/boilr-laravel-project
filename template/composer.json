@@ -36,7 +36,7 @@
         "phpstan/phpstan-mockery": "^2.0",
         "phpstan/phpstan-strict-rules": "^2.0",
         "phpstan/phpstan-webmozart-assert": "^2.0",
-        "phpunit/phpunit": "^11.5.3",
+        "phpunit/phpunit": "^12.2.2",
         "shipmonk/phpstan-rules": "^4.0",
         "spatie/phpunit-snapshot-assertions": "^5.1"
     },
