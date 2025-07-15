@@ -29,14 +29,14 @@ RUN --mount=type=cache,target=/root/.composer/cache \
 
 RUN npm run build
 
-FROM alpine:3.21.3 AS files
+FROM alpine:3.22.0 AS files
 
 COPY --link ./nginx/files /files/
 COPY --link --from=builder /var/www/public/ /files/var/www/public/
 
 RUN chmod -R go-w /files/var/www/public
 
-FROM nginx:1.27.5-alpine3.21-slim
+FROM nginx:1.29.0-alpine3.22-slim
 
 ARG NGINX_PUBLIC_DIR=/var/www/public
 ENV NGINX_PUBLIC_DIR $NGINX_PUBLIC_DIR
