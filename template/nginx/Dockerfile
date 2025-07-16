@@ -5,7 +5,7 @@
 {{- else if eq PhpVersion "8.2"}}
     {{- $dockerTag = "1.4.3" }}
 {{- else}}
-    {{- $dockerTag = "1.1.0" }}
+    {{- $dockerTag = "1.1.1" }}
 {{- end -}}
 
 FROM ghcr.io/ilyes512/php{{ PhpVersion | replace "."  "" }}:builder_nodejs-{{$dockerTag}} AS builder
