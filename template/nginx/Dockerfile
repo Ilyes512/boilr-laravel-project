@@ -29,7 +29,7 @@ RUN --mount=type=cache,target=/root/.composer/cache \
 
 RUN npm run build
 
-FROM alpine:3.22.0 AS files
+FROM alpine:3.22.1 AS files
 
 COPY --link ./nginx/files /files/
 COPY --link --from=builder /var/www/public/ /files/var/www/public/
