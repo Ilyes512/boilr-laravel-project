@@ -99,17 +99,6 @@ return [
             'retry_after' => 60,
         ],
 
-        'mailpit' => [
-            'transport' => 'smtp',
-            'host' => 'mailpit',
-            'port' => 1025,
-            'encryption' => 'tls',
-            'username' => null,
-            'password' => null,
-            'timeout' => null,
-            'auth_mode' => null,
-        ],
-
     ],
 
     /*

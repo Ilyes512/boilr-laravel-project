@@ -24,7 +24,7 @@ abstract class FeatureTestCase extends TestCase
         }
 
         static::fail(
-            "Snapshot \"$snapshotFileName\" does not exist.\n" .
+            "Snapshot \"{$snapshotFileName}\" does not exist.\n" .
             "You can automatically create it by running \"composer update-test-snapshots\".\n" .
             'Make sure to inspect the created snapshot afterwards to ensure its correctness!',
         );
