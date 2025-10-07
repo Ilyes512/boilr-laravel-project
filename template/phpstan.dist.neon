@@ -6,6 +6,24 @@ parameters:
 	tmpDir: ./.phpstan.cache
 	noEnvCallsOutsideOfConfig: true
 	checkModelProperties: true
+	reportUnmatchedIgnoredErrors: true
 	paths:
 		- app
 		- tests
+	exceptions:
+		uncheckedExceptionClasses:
+			- PHPUnit\Framework\AssertionFailedError
+	ignoreErrors:
+		-
+			identifier: staticMethod.dynamicCall
+			reportUnmatched: false
+			message: '#Dynamic call to static method Illuminate\\Database\\Eloquent\\Builder#'
+		-
+			identifier: shipmonk.publicPropertyNotReadonly
+			reportUnmatched: false
+			paths:
+				- app/Models
+				# - app/Filament
+				# - app/Livewire
+	# strictRules:
+	# 	dynamicCallOnStaticMethod: false
