@@ -296,8 +296,6 @@ tasks:
       # We are only adding new migrations and not running migrate:refresh so we don't lose our data for the dev environment:
       - task: app:migrate
       - task: app:migrate-fresh:test
-      - task: dc:run:artisan
-        vars: { CLI_ARGS: "icons:cache" }
       - task: npm:build
 
   md:checkstyle:
