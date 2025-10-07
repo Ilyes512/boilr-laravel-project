@@ -50,7 +50,7 @@ jobs:
 
       - name: Validate composer.json and composer.lock
         if: steps.composer-cache.outputs.cache-hit != 'true'
-        run: composer validate
+        run: composer validate --strict
 
       - name: Install dependencies
         if: steps.composer-cache.outputs.cache-hit != 'true'

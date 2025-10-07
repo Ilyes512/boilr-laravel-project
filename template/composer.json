@@ -63,7 +63,7 @@
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
         ],
         "checkall": [
-            "composer validate",
+            "composer validate --strict",
             "@checkstyle",
             "@checktype",
             "@test"
