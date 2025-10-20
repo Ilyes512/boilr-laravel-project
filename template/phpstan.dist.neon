@@ -17,7 +17,11 @@ parameters:
 		-
 			identifier: staticMethod.dynamicCall
 			reportUnmatched: false
-			message: '#Dynamic call to static method Illuminate\\Database\\Eloquent\\Builder#'
+			messages:
+				- '#Dynamic call to static method Illuminate\\Database\\Eloquent\\Builder#'
+				- '#Dynamic call to static method Livewire\\Features\\SupportTesting\\Testable::#'
+				- '#Dynamic call to static method PHPUnit\\Framework\\Assert::#'
+				- '#Dynamic call to static method Illuminate\\Testing\\TestResponse#'
 		-
 			identifier: shipmonk.publicPropertyNotReadonly
 			reportUnmatched: false
