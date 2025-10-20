@@ -137,7 +137,7 @@ jobs:
       - name: Setup PHP
         uses: ./.github/actions/setup-php
 
-      - name: Run phpstan analyse
+      - name: Run PHPStan static code analyse
         run: vendor/bin/phpstan analyse --memory-limit=-1 --error-format=github -vvv
 
       - name: Generate PHPStan analysis report
