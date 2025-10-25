@@ -60,7 +60,7 @@ jobs:
     needs: [composer-install]
     services:
       mariadb:
-        image: mariadb:11.7.2-noble
+        image: mariadb:11.8.3-noble
         env:
           MARIADB_DATABASE: "{{snakecase ProjectShortName}}_test"
           MARIADB_USER: "{{snakecase ProjectShortName}}_test"
@@ -156,7 +156,7 @@ jobs:
     needs: [composer-install]
     services:
       mariadb:
-        image: mariadb:11.7.2-noble
+        image: mariadb:11.8.3-noble
         env:
           MARIADB_DATABASE: "{{snakecase ProjectShortName}}_test"
           MARIADB_USER: "{{snakecase ProjectShortName}}_test"
