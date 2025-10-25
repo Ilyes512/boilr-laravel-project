@@ -16,7 +16,7 @@ runs:
 
     - name: Restore Composer cache
       id: composer-cache
-      uses: actions/cache/restore@v4.2.3
+      uses: actions/cache/restore@v4.3.0
       with:
         path: |
           {{`${{ steps.composer-cache-dir.outputs.dir }}`}}
@@ -24,7 +24,7 @@ runs:
         key: composer-{{`${{ hashFiles('**/composer.lock') }}`}}
 
     - name: Setup PHP
-      uses: shivammathur/setup-php@2.30.2
+      uses: shivammathur/setup-php@2.35.5
       with:
       {{- if eq PhpVersion "8.3"}}
         php-version: "8.3"

@@ -6,12 +6,12 @@ vars:
     sh: pwd
   ORBSTACK_ENABLED:
     sh: test "$(docker context show)" = "orbstack" && echo 1 || echo 0
-  ORB_APP_HOST: http://{{kebabcase ProjectShortName}}.local
+  ORB_APP_HOST: https://{{kebabcase ProjectShortName}}.local
   DOCKER_CACHE_VOLUMES: [ {{snakecase ProjectShortName}}_composer, {{snakecase ProjectShortName}}_npm ]
   # Latest version of MarkdownLint:
-  #   - https://hub.docker.com/r/markdownlint/markdownlint/tags; or
-  #   - https://github.com/markdownlint/markdownlint/tags
-  MARKDOWNLINT_VERSION: v0.17.2
+  #   - https://hub.docker.com/r/davidanson/markdownlint-cli2/tags
+  #   - https://github.com/DavidAnson/markdownlint-cli2/tags
+  MARKDOWNLINT_VERSION: v0.18.1
 
 # env:
 #   BUILDKIT_PROGRESS: plain
@@ -296,8 +296,6 @@ tasks:
       # We are only adding new migrations and not running migrate:refresh so we don't lose our data for the dev environment:
       - task: app:migrate
       - task: app:migrate-fresh:test
-      - task: dc:run:artisan
-        vars: { CLI_ARGS: "icons:cache" }
       - task: npm:build
 
   md:checkstyle:

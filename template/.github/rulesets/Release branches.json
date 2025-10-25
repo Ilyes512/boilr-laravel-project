@@ -2,7 +2,7 @@
     "name": "Release branches",
     "target": "branch",
     "source_type": "Repository",
-    "source": "{{ComposerName}}",
+    "source": "{{RepoName}}",
     "enforcement": "active",
     "conditions": {
         "ref_name": {

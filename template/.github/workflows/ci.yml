@@ -1,4 +1,4 @@
-name: PHP
+name: CI
 
 on:
   workflow_dispatch:
@@ -20,7 +20,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4.2.2
+        uses: actions/cache@v5
 
       - name: Get composer cache directory
         id: composer-cache-dir
@@ -28,17 +28,15 @@ jobs:
 
       - name: Cache Composer dependencies
         id: composer-cache
-        uses: actions/cache@v4.2.3
+        uses: actions/cache@v4.3.0
         with:
-          path: |
-            {{`${{ steps.composer-cache-dir.outputs.dir }}`}}
-            vendor
-          key: composer-{{`${{ hashFiles('**/composer.lock') }}`}}
-          restore-keys: composer-
+          path: {{`${{ steps.composer-cache-dir.outputs.dir }}`}}
+          key: {{`${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}`}}
+          restore-keys: {{`${{ runner.os }}-composer-`}}
 
       - name: Setup PHP
         if: steps.composer-cache.outputs.cache-hit != 'true'
-        uses: shivammathur/setup-php@2.32.0
+        uses: shivammathur/setup-php@2.35.5
         with:
         {{- if eq PhpVersion "8.3"}}
           php-version: "8.3"
@@ -50,7 +48,7 @@ jobs:
 
       - name: Validate composer.json and composer.lock
         if: steps.composer-cache.outputs.cache-hit != 'true'
-        run: composer validate
+        run: composer validate --strict
 
       - name: Install dependencies
         if: steps.composer-cache.outputs.cache-hit != 'true'
@@ -62,7 +60,7 @@ jobs:
     needs: [composer-install]
     services:
       mariadb:
-        image: mariadb:11.7.2-noble
+        image: mariadb:11.8.3-noble
         env:
           MARIADB_DATABASE: "{{snakecase ProjectShortName}}_test"
           MARIADB_USER: "{{snakecase ProjectShortName}}_test"
@@ -74,7 +72,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4.2.2
+        uses: actions/cache@v5
         with:
           fetch-depth: 0
 
@@ -83,14 +81,17 @@ jobs:
         with:
           coverage: pcov
 
-      - name: Run migrations
-        run: php artisan --env=testing migrate:fresh --seed
-
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "22"
           cache: npm
+
+      - name: Run composer dump-autoload
+        run: composer dump-autoload
+
+      - name: Run migrations
+        run: php artisan --env=testing migrate:fresh --seed
 
       - name: Install NPM dependencies
         run: npm ci
@@ -114,7 +115,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4.2.2
+        uses: actions/cache@v5
 
       - name: Setup PHP
         uses: ./.github/actions/setup-php
@@ -129,12 +130,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4.2.2
+        uses: actions/cache@v5
 
       - name: Setup PHP
         uses: ./.github/actions/setup-php
 
-      - name: Run phpstan analyse
+      - name: Run PHPStan static code analyse
         run: vendor/bin/phpstan analyse --memory-limit=-1 --error-format=github -vvv
 
       - name: Generate PHPStan analysis report
@@ -155,7 +156,7 @@ jobs:
     needs: [composer-install]
     services:
       mariadb:
-        image: mariadb:11.7.2-noble
+        image: mariadb:11.8.3-noble
         env:
           MARIADB_DATABASE: "{{snakecase ProjectShortName}}_test"
           MARIADB_USER: "{{snakecase ProjectShortName}}_test"
@@ -167,7 +168,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4.2.2
+        uses: actions/cache@v5
 
       - name: Setup PHP
         uses: ./.github/actions/setup-php
@@ -194,7 +195,7 @@ jobs:
     needs: [tests, checktype]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
 

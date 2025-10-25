@@ -48,7 +48,7 @@ return [
             'username' => env('MAIL_USERNAME'),
             'password' => env('MAIL_PASSWORD'),
             'timeout' => null,
-            'local_domain' => env('MAIL_EHLO_DOMAIN', parse_url(env('APP_URL', 'http://localhost'), PHP_URL_HOST)),
+            'local_domain' => env('MAIL_EHLO_DOMAIN', parse_url((string) env('APP_URL', 'http://localhost'), PHP_URL_HOST)),
         ],
 
         'ses' => [
@@ -87,6 +87,7 @@ return [
                 'smtp',
                 'log',
             ],
+            'retry_after' => 60,
         ],
 
         'roundrobin' => [
@@ -95,17 +96,7 @@ return [
                 'ses',
                 'postmark',
             ],
-        ],
-
-        'local' => [
-            'transport' => 'smtp',
-            'host' => env('MAIL_HOST', 'mailpit'),
-            'port' => env('MAIL_PORT', 1025),
-            'encryption' => null,
-            'username' => null,
-            'password' => null,
-            'timeout' => null,
-            'auth_mode' => null,
+            'retry_after' => 60,
         ],
 
     ],

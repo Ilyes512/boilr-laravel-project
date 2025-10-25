@@ -7,7 +7,7 @@
         "8.3",
         "8.2"
     ],
-    "ComposerName": "acme/project",
+    "RepoName": "acme/project",
     "ComposerLicense": [
         "MIT",
         "proprietary"

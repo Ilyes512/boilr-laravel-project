@@ -28,8 +28,8 @@ running.
 
 | Description      | Uri or host:port        | OrbStack domain            |
 |------------------|-------------------------|----------------------------|
-| Application url  | <http://localhost:8080> | <http://{{kebabcase ProjectShortName}}.local>      |
-| Mailpit url      | <http://localhost:8025> | <http://mail.{{kebabcase ProjectShortName}}.local> |
+| Application url  | <http://localhost:8080> | <https://{{kebabcase ProjectShortName}}.local>      |
+| Mailpit url      | <http://localhost:8025> | <https://mail.{{kebabcase ProjectShortName}}.local> |
 | MariDB host port | `localhost:3306`        | `db.{{kebabcase ProjectShortName}}.local`          |
 | Redis host port  | `localhost:6379`        | `redis.{{kebabcase ProjectShortName}}.local`       |
 
@@ -58,4 +58,4 @@ instance (re)fetch the composer and npm dependencies, run the migrations and reb
 
 #### Using Clockwork to debug the application
 
-Checkout <http://foboar.local/clockwork> to see the [clockwork](https://underground.works/clockwork/) dashboard.
+Checkout <https://{{kebabcase ProjectShortName}}.local/clockwork> to see the [clockwork](https://underground.works/clockwork/) dashboard.

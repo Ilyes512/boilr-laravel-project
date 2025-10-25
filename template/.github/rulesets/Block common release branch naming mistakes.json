@@ -2,7 +2,7 @@
     "name": "Block common release branch naming mistakes",
     "target": "branch",
     "source_type": "Repository",
-    "source": "{{ComposerName}}",
+    "source": "{{RepoName}}",
     "enforcement": "active",
     "conditions": {
         "ref_name": {
