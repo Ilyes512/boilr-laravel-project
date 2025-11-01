@@ -123,7 +123,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .phpcs-cache
-          key: {{`codesniffer-${{ hashFiles('phpcs.xml.dist',  'composer.lock') }}`}}
+          key: {{`codesniffer-${{ hashFiles('phpcs.xml.dist', 'composer.lock') }}`}}
           restore-keys: codesniffer-
       - name: Linting back-end Code Style using PHP CodeSniffer
         run: composer checkstyle
