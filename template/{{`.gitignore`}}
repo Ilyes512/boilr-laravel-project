@@ -29,6 +29,7 @@ Thumbs.db
 Taskfile.yml
 .task
 /coverage
+/reports
 phpstan.neon
 .phpstan.cache
 .phpcs.cache
