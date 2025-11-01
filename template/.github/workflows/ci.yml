@@ -101,7 +101,7 @@ jobs:
       - name: Run migrations
         run: php artisan --env=testing migrate:fresh --seed
       - name: Back-end Unit tests using PHPUnit
-        run: php -dpcov.enabled=1 -dpcov.directory=. vendor/bin/phpunit -d --without-creating-snapshots --log-junit=reports/phpunit/report-phpunit.xml --coverage-clover=reports/phpunit/coverage-phpunit.xml
+        run: php -dpcov.enabled=1 -dpcov.directory=. vendor/bin/phpunit -d --without-creating-snapshots --log-junit=reports/phpunit/phpunit-report.xml --coverage-clover=reports/phpunit/phpunit-coverage.xml
       - name: Upload PHPUnit coverage report
         uses: actions/upload-artifact@v5
         with:
@@ -152,7 +152,7 @@ jobs:
         if: always()
         run: |
           mkdir -p reports/phpstan
-          vendor/bin/phpstan analyse --memory-limit=-1 --error-format=json > reports/phpstan/phpstan.json
+          vendor/bin/phpstan analyse --memory-limit=-1 --error-format=json > reports/phpstan/phpstan-report.json
       - name: Upload PHPStan analysis report
         if: steps.phpstan-report.outcome == 'success'
         uses: actions/upload-artifact@v5
