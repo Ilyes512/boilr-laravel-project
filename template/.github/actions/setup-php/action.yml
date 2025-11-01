@@ -1,10 +1,17 @@
 name: Setup PHP
+description: Compose action that sets up PHP and Composer
 
 inputs:
+  php-version:
+    description: The PHP version
+    default: "{{ if eq PhpVersion "8.3"}}8.3{{ else if eq PhpVersion "8.2"}}8.2{{ else }}8.4{{ end }}"
   coverage:
     description: Set PHP coverage driver
-    type: string
-    default: "none"
+    default: none
+  extensions:
+    description: Set PHP extensions
+  github-token:
+    description: Add a Github Token which will be used for Composer auth
 
 runs:
   using: composite
@@ -16,29 +23,23 @@ runs:
 
     - name: Restore Composer cache
       id: composer-cache
-      uses: actions/cache/restore@v4.3.0
+      uses: actions/cache/restore@v4
       with:
-        path: |
-          {{`${{ steps.composer-cache-dir.outputs.dir }}`}}
-          vendor
-        key: composer-{{`${{ hashFiles('**/composer.lock') }}`}}
+        path: {{`${{ steps.composer-cache-dir.outputs.dir }}`}}
+        key: {{`${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}`}}
+        restore-keys: {{`${{ runner.os }}-composer-`}}
 
     - name: Setup PHP
-      uses: shivammathur/setup-php@2.35.5
+      uses: shivammathur/setup-php@v2
       with:
-      {{- if eq PhpVersion "8.3"}}
-        php-version: "8.3"
-      {{- else if eq PhpVersion "8.2"}}
-        php-version: "8.2"
-      {{- else}}
-        php-version: "8.4"
-      {{- end}}
+        php-version: {{`${{ inputs.php-version }}`}}
         coverage: {{`${{ inputs.coverage }}`}}
+        extensions: {{`${{ inputs.extensions }}`}}
+        github-token: {{`${{ inputs.github-token }}`}}
 
     - name: Install dependencies
-      if: steps.composer-cache.outputs.cache-hit != 'true'
       shell: bash
-      run: composer install
+      run: composer install --no-interaction --no-progress --prefer-dist --ignore-platform-reqs
 
     - name: Copy .env.example to .env
       shell: bash
@@ -51,3 +52,10 @@ runs:
     - name: Update .env.testing DB_HOST
       shell: bash
       run: sed -i 's#^\(DB_HOST=\).*#\1127.0.0.1#' .env.testing
+
+    - name: Save Composer cache
+      if: {{`${{ steps.composer-cache.outputs.cache-hit != 'true' }}`}}
+      uses: actions/cache/save@v4
+      with:
+        path: {{`${{ steps.composer-cache-dir.outputs.dir }}`}}
+        key: {{`${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}`}}
