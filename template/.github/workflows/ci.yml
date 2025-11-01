@@ -103,7 +103,7 @@ jobs:
         run: php -dpcov.enabled=1 -dpcov.directory=. vendor/bin/phpunit --coverage-clover=phpunit-report.xml
 
       - name: Upload PHPUnit coverage report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: phpunit-report
           path: phpunit-report.xml
@@ -145,7 +145,7 @@ jobs:
 
       - name: Upload PHPStan analysis report
         if: steps.phpstan-report.outcome == 'success'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: phpstan-report
           path: phpstan-report.json
