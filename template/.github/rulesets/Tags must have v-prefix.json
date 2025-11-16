@@ -1,0 +1,24 @@
+{
+    "name": "Tags must have v-prefix",
+    "target": "tag",
+    "source_type": "Repository",
+    "source": "{{RepoName}}",
+    "enforcement": "active",
+    "conditions": {
+        "ref_name": {
+            "exclude": [
+                "refs/tags/v*"
+            ],
+            "include": []
+        }
+    },
+    "rules": [
+        {
+            "type": "non_fast_forward"
+        },
+        {
+            "type": "creation"
+        }
+    ],
+    "bypass_actors": []
+}

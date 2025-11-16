@@ -26,19 +26,23 @@
                 "do_not_enforce_on_create": true,
                 "required_status_checks": [
                     {
-                        "context": "PHPUnit tests",
-                        "integration_id": 15368
-                    },
-                    {
-                        "context": "Checkstyle",
-                        "integration_id": 15368
-                    },
-                    {
-                        "context": "Checktype",
-                        "integration_id": 15368
-                    },
-                    {
                         "context": "Check Model DocBlocks",
+                        "integration_id": 15368
+                    },
+                    {
+                        "context": "Check back-end Code Style",
+                        "integration_id": 15368
+                    },
+                    {
+                        "context": "Check back-end Model DocBlocks",
+                        "integration_id": 15368
+                    },
+                    {
+                        "context": "Check back-end Static Code Analysis",
+                        "integration_id": 15368
+                    },
+                    {
+                        "context": "Check back-end unit tests",
                         "integration_id": 15368
                     }{{if UseSonarQube}},
                     {
@@ -53,6 +57,7 @@
             "parameters": {
                 "required_approving_review_count": 0,
                 "dismiss_stale_reviews_on_push": false,
+                "required_reviewers": [],
                 "require_code_owner_review": true,
                 "require_last_push_approval": false,
                 "required_review_thread_resolution": true,
