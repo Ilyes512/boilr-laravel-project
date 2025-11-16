@@ -1,11 +1,11 @@
 {{$dockerTag := "" }}
 
 {{- if eq PhpVersion "8.3"}}
-    {{- $dockerTag = "1.4.2" }}
+    {{- $dockerTag = "1.4.3" }}
 {{- else if eq PhpVersion "8.2"}}
     {{- $dockerTag = "1.4.3" }}
 {{- else}}
-    {{- $dockerTag = "1.1.2" }}
+    {{- $dockerTag = "1.1.3" }}
 {{- end -}}
 
 FROM ghcr.io/ilyes512/php{{ PhpVersion | replace "."  "" }}:builder_nodejs-{{$dockerTag}} AS builder
