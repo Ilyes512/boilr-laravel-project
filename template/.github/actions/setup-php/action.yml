@@ -25,7 +25,9 @@ runs:
       id: composer-cache
       uses: actions/cache/restore@v4
       with:
-        path: {{`${{ steps.composer-cache-dir.outputs.dir }}`}}
+        path: |
+          {{`${{ steps.composer-cache-dir.outputs.dir }}`}}
+          vendor
         key: {{`${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}`}}
         restore-keys: {{`${{ runner.os }}-composer-`}}
 
@@ -57,5 +59,7 @@ runs:
       if: {{`${{ steps.composer-cache.outputs.cache-hit != 'true' }}`}}
       uses: actions/cache/save@v4
       with:
-        path: {{`${{ steps.composer-cache-dir.outputs.dir }}`}}
+        path: |
+          {{`${{ steps.composer-cache-dir.outputs.dir }}`}}
+          vendor
         key: {{`${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}`}}
