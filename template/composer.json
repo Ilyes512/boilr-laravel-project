@@ -19,7 +19,7 @@
         {{- end}}
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
-        "webmozart/assert": "^1.11"
+        "webmozart/assert": "^2.0.0"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.5",
