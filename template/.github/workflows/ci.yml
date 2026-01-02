@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Setup Node
         uses: ./.github/actions/setup-node
         with:
@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Setup PHP
         uses: ./.github/actions/setup-php
         with:
@@ -42,7 +42,7 @@ jobs:
     needs: [setup-composer-cache]
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Setup PHP
         uses: ./.github/actions/setup-php
         with:
@@ -58,7 +58,7 @@ jobs:
     needs: [setup-npm-cache]
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Setup Node
         uses: ./.github/actions/setup-node
         with:
@@ -83,7 +83,7 @@ jobs:
         options: --health-cmd="mariadb-admin ping" --health-interval=5s --health-timeout=2s --health-retries=3
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Setup PHP
@@ -114,7 +114,7 @@ jobs:
     needs: [setup-composer-cache]
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Setup PHP
         uses: ./.github/actions/setup-php
         with:
@@ -134,7 +134,7 @@ jobs:
     needs: [setup-composer-cache]
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Setup PHP
         uses: ./.github/actions/setup-php
         with:
@@ -177,7 +177,7 @@ jobs:
         options: --health-cmd="mariadb-admin ping" --health-interval=5s --health-timeout=2s --health-retries=3
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Setup PHP
         uses: ./.github/actions/setup-php
         with:
@@ -200,7 +200,7 @@ jobs:
     runs-on: ubuntu-24.04
     needs: [be-unit-tests, be-static-code-analysis]
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
       - name: Download PHPUnit coverage report
