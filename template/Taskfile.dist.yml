@@ -11,7 +11,7 @@ vars:
   # Latest version of MarkdownLint:
   #   - https://hub.docker.com/r/davidanson/markdownlint-cli2/tags
   #   - https://github.com/DavidAnson/markdownlint-cli2/tags
-  MARKDOWNLINT_VERSION: v0.18.1
+  MARKDOWNLINT_VERSION: v0.20.0
 
 # env:
 #   BUILDKIT_PROGRESS: plain

@@ -4,7 +4,7 @@ description: Compose action that sets up PHP and Composer
 inputs:
   php-version:
     description: The PHP version
-    default: "{{ if eq PhpVersion "8.3"}}8.3{{ else if eq PhpVersion "8.2"}}8.2{{ else }}8.4{{ end }}"
+    default: "{{ if eq PhpVersion "8.4"}}8.4{{ else if eq PhpVersion "8.3"}}8.3{{ else }}8.5{{ end }}"
   coverage:
     description: Set PHP coverage driver
     default: none
@@ -23,9 +23,11 @@ runs:
 
     - name: Restore Composer cache
       id: composer-cache
-      uses: actions/cache/restore@v4
+      uses: actions/cache/restore@v5
       with:
-        path: {{`${{ steps.composer-cache-dir.outputs.dir }}`}}
+        path: |
+          {{`${{ steps.composer-cache-dir.outputs.dir }}`}}
+          vendor
         key: {{`${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}`}}
         restore-keys: {{`${{ runner.os }}-composer-`}}
 
@@ -55,7 +57,9 @@ runs:
 
     - name: Save Composer cache
       if: {{`${{ steps.composer-cache.outputs.cache-hit != 'true' }}`}}
-      uses: actions/cache/save@v4
+      uses: actions/cache/save@v5
       with:
-        path: {{`${{ steps.composer-cache-dir.outputs.dir }}`}}
+        path: |
+          {{`${{ steps.composer-cache-dir.outputs.dir }}`}}
+          vendor
         key: {{`${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}`}}
