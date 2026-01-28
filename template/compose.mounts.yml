@@ -25,6 +25,6 @@ services:
 
   mariadb:
     volumes:
-      - mariadb_data:/var/lib/mysql:Z
+      - mariadb_data:/var/lib/mysql
       - ./mariadb/init:/docker-entrypoint-initdb.d
       - ./mariadb/custom.cnf:/etc/mysql/conf.d/custom.cnf
