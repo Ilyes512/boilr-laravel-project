@@ -26,12 +26,12 @@ tasks run `task --list` in your terminal. Here is a short list of tasks to get y
 To get the project up and running, run `task up`. This will automate all the steps needed to get the project up and
 running.
 
-| Description      | Uri or host:port        | OrbStack domain            |
-|------------------|-------------------------|----------------------------|
-| Application url  | <http://localhost:8080> | <https://{{kebabcase ProjectShortName}}.local>      |
-| Mailpit url      | <http://localhost:8025> | <https://mail.{{kebabcase ProjectShortName}}.local> |
-| MariDB host port | `localhost:3306`        | `db.{{kebabcase ProjectShortName}}.local`          |
-| Redis host port  | `localhost:6379`        | `redis.{{kebabcase ProjectShortName}}.local`       |
+| Description       | Uri or host:port        | OrbStack domain            |
+|-------------------|-------------------------|----------------------------|
+| Application url   | <http://localhost:8080> | <https://{{kebabcase ProjectShortName}}.local>      |
+| Mailpit url       | <http://localhost:8025> | <https://mail.{{kebabcase ProjectShortName}}.local> |
+| MariaDB host port | `localhost:3306`        | `db.{{kebabcase ProjectShortName}}.local`          |
+| Redis host port   | `localhost:6379`        | `redis.{{kebabcase ProjectShortName}}.local`       |
 
 > [!TIP]
 > If you are a macOS user and you are using OrbStack, you can navigate to <http://orb.local> to see the domains of all
