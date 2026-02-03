@@ -44,6 +44,10 @@
                     {
                         "context": "Check back-end unit tests",
                         "integration_id": 15368
+                    },
+                    {
+                        "context": "Check markdown style",
+                        "integration_id": 15368
                     }{{if UseSonarQube}},
                     {
                         "context": "SonarQube",

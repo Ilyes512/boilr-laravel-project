@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   mdlint:
-    name: Checkstyle
+    name: Check markdown style
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout repository
