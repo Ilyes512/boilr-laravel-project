@@ -111,3 +111,5 @@
         "update-test-snapshots": "Update PHPUnit snapshots"
     }
 }
+
+ADD BUGSNAG 
